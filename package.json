@@ -1,23 +1,28 @@
 {
   "name": "json-logic-resolve",
   "version": "1.0.0",
-  "description": "resole logic in json",
+  "description": "resolve logic from json",
   "main": "./lib/Logic.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^5.0.0",
+    "chai": "^4.0.0"
+  },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaoma14339/json-logic-resolve.git"
+    "url": "git+https://github.com/UnPourTous/json-logic-resolve.git"
   },
   "author": "lukequ",
-  "license": "ISC",
-  "devDependencies": {
-    "chai": "^4.0.0",
-    "mocha": "^5.0.0"
-  },
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xiaoma14339/json-logic-resolve/issues"
+    "url": "https://github.com/UnPourTous/json-logic-resolve/issues"
   },
-  "homepage": "https://github.com/xiaoma14339/json-logic-resolve#readme"
+  "homepage": "https://github.com/UnPourTous/json-logic-resolve#readme"
 }
