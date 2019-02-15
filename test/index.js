@@ -1,64 +1,84 @@
 var resolveLogic = require('../lib/Logic.js');
 const expect = require('chai').expect;
+
 var requirement = {
     operator: "&&",
-    left: {
-        operator: "&&",
-        left: {
-            operator: "in",
-            key: "month",
-            range: [1, 12]
+    operands: [
+        {
+            operator: "&&",
+            operands: [
+                {
+                    operator: "in",
+                    key: "month",
+                    range: [1, 12]
+                },
+                {
+                    operator: ">",
+                    key: "month",
+                    value: 10
+                },
+                {
+                    operator: "<",
+                    key: "month",
+                    value: 40
+                }
+            ]
         },
-        right: {
-            operator: "bool",
-            value: "false"
+        {
+            operator: "||",
+            operands: [
+                {
+                    operator: "match",
+                    regExp: "^\\S{1,30}$",
+                    key: "text"
+                },
+                {
+                    operator: "==",
+                    key: "day",
+                    value: 3
+                }
+            ]
         }
-    },
-    right: {
-        operator: "||",
-        left: {
-            operator: "match",
-            regExp: "^\\S{1,30}$",
-            key: "text"
-        },
-        right: {
-            operator: "[]",
-            key: "hour",
-            range: [0, 10]
-        }
-    }
+    ]
 };
+
 var requirement1 = {
-    operator: "&&",
-    left: {
-        operator: "&&",
-        left: {
-            operator: ">",
-            key: "month",
-            value: 30
+    operator: "||",
+    operands: [
+        {
+            operator: "&&",
+            operands: [
+                {
+                    operator: ">",
+                    key: "month",
+                    value: 30
+                },
+                {
+                    operator: "<",
+                    key: "hour",
+                    value: 8
+                }
+            ]
         },
-        right: {
-            operator: "<",
-            key: "hour",
-            value: 8
+        {
+            operator: "&&",
+            operands: [
+                {
+                    operator: "<=",
+                    key: "day",
+                    value: 2
+                },
+                {
+                    operator: ">=",
+                    key: "year",
+                    value: 20
+                }
+            ]
         }
-    },
-    right: {
-        operator: "||",
-        left: {
-            operator: "<=",
-            key: "day",
-            value: 2
-        },
-        right: {
-            operator: ">=",
-            key: "year",
-            value: 20
-        }
-    }
+    ]
 };
 var requirement2 = {
-    operator: "=",
+    operator: "==",
     key: "year",
     value: 10
 };
@@ -79,9 +99,9 @@ describe("logic", function () {
         });
         it("resolve compare", function () {
             expect(resolveLogic(requirement1, date, false)).to.equal(false);
-        })
+        });
         it("resolve equal", function () {
             expect(resolveLogic(requirement2, date, false)).to.equal(true);
         })
     })
-})
+});

@@ -14,25 +14,23 @@
 - defaultValue默认返回值（不包含条件对应的key或者格式错误）
 
 ### json的格式说明
-原理是基于二叉树的遍历来解析一个复杂条件，所以json的结构也是一个二叉树
+原理是基于n叉树的遍历来完成复杂条件的逻辑运算，所以json的结构也是一个n叉树
 
-二叉树上的节点的类型分为两种，统一用operator表示
+n叉树上的节点的类型分为两种，统一用operator表示
 - 逻辑节点（&&， ||）
 对子节点做逻辑运算
-- 条件节点（bool，match，in，[]，>，>=，<，<=，=）
+- 条件节点（match，in，>，>=，<，<=，==）
 包含具体的条件
 
 ##### 条件类型
 目前支持的条件判断类型（requireType）有9种
-- 布尔 bool
 - 正则 match
 - 枚举 in
-- 范围（两个数值之间） []
 - 大于 >
 - 大于等于 >=
 - 小于 <
 - 小于等于 <=
-- 等于 =
+- 等于 ==
 
 ### 配置说明与示例
 例如有下面这么一个对象
@@ -47,60 +45,87 @@ var date = {
 ```
 我们想知道里面的一些值是否满足以下条件
 - month为1或12           （a）
-- 有一个布尔值为false      （b）
-- text在1～30字符之间      （c）
-- 0 < hour < 10         （d）
+- month > 10            （b）
+- month < 40            （c）
+- test在1～30个字符之间    （d）
+- day = 3               （e）
 
 然后对这几个条件做如下的的逻辑运算
 
-(a && b && (c || d))
+((a && b && c) && (d || e))
 
-按照二叉树的结构我们可以修改逻辑运算表达式
+首先转换成前缀表达式
 
-((a && b) && (c || d))
+&& && a b c || d e
 
-即
+或者写得更清晰一下
+
+&& (&& a b c) (|| d e)
+
+按照n叉树的结构我们可以修改成
 ```
- {
-    left: {
-        left: a,
-        right: b
-    },
-    right: {
-        left: c,
-        right: d
-    }
+ nodeTree = {
+    type: "||",
+    nodes: [
+        {
+            type: "&&",
+            nodes: [
+                a,
+                b,
+                c
+            ]
+        },
+        {
+            type: "&&",
+            nodes: [
+                d,
+                e
+            ]
+        }
+    ]
 }
 ```
 然后按照函数的规则配置即可
 ```
 var requirement = {
     operator: "&&",
-    left: {
-        operator: "&&",
-        left: {
-            operator: "in",
-            key: "month",
-            range: [1, 12]
+    operands: [
+        {
+            operator: "&&",
+            operands: [
+                {
+                    operator: "in",
+                    key: "month",
+                    range: [1, 12]
+                },
+                {
+                    operator: ">",
+                    key: "month",
+                    value: 10
+                },
+                {
+                    operator: "<",
+                    key: "month",
+                    value: 40
+                }
+            ]
         },
-        right: {
-            operator: "bool",
-            value: "false"
+        {
+            operator: "||",
+            operands: [
+                {
+                    operator: "match",
+                    regExp: "^\\S{1,30}$",
+                    key: "text"
+                },
+                {
+                    operator: "==",
+                    key: "day",
+                    value: 3
+                }
+            ]
         }
-    },
-    right: {
-        operator: "||",
-        left: {
-            operator: "match",
-            regExp: "^\\S{1,30}$",
-            key: "text"
-        },
-        right: {
-            operator: "[]",
-            key: "hour",
-            range: [0, 10]
-        }
-    }
+    ]
 };
 
 // 结果应该为true
