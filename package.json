@@ -1,6 +1,6 @@
 {
   "name": "@unpourtous/json-logic-resolve",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "resolve logic from json",
   "main": "./lib/Logic.js",
   "directories": {
