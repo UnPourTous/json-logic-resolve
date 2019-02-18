@@ -1,5 +1,5 @@
-var resolveLogic = require('../lib/Logic.js');
-const expect = require('chai').expect;
+import resolveLogic from "../lib/Logic.js"
+import { expect } from 'chai'
 
 var requirement = {
     operator: "&&",

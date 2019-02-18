@@ -9,11 +9,15 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "mocha": "^5.0.0",
-    "chai": "^4.0.0"
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "chai": "^4.0.0",
+    "mocha": "^5.0.0"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha --require babel-core/register"
   },
   "repository": {
     "type": "git",
