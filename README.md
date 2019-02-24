@@ -37,18 +37,18 @@ n叉树上的节点的类型分为两种，统一用operator表示
 ```
 var date = {
     text: "fdafdffdafdffdafdffdafds",
-    year: 10,
-    month: 45,
+    year: 2018,
+    month: 11,
     day: 3,
     hour: 6
 };
 ```
 我们想知道里面的一些值是否满足以下条件
-- month为1或12           （a）
-- month > 10            （b）
-- month < 40            （c）
-- test在1～30个字符之间    （d）
-- day = 3               （e）
+- const a = [2009, 2019].includes(year)
+- const b = month > 6
+- const c = month < 12
+- const d = text.length >= 1 && text.length <= 30
+- const e = day == 3
 
 然后对这几个条件做如下的的逻辑运算
 
@@ -56,27 +56,23 @@ var date = {
 
 首先转换成前缀表达式
 
-&& && a b c || d e
-
-或者写得更清晰一下
-
 && (&& a b c) (|| d e)
 
 按照n叉树的结构我们可以修改成
-```
+``` js
  nodeTree = {
-    type: "||",
-    nodes: [
+    operator: "||",
+    operands: [
         {
-            type: "&&",
-            nodes: [
+            operator: "&&",
+            operands: [
                 a,
                 b,
                 c
             ]
         },
         {
-            type: "&&",
+            operator: "&&",
             nodes: [
                 d,
                 e
@@ -85,8 +81,8 @@ var date = {
     ]
 }
 ```
-然后按照函数的规则配置即可
-```
+然后替换其中的operands为实际判断节点即可:
+``` js
 var requirement = {
     operator: "&&",
     operands: [
@@ -95,18 +91,18 @@ var requirement = {
             operands: [
                 {
                     operator: "in",
-                    key: "month",
-                    range: [1, 12]
+                    key: "year",
+                    range: [2009, 2019]
                 },
                 {
                     operator: ">",
                     key: "month",
-                    value: 10
+                    value: 6
                 },
                 {
                     operator: "<",
                     key: "month",
-                    value: 40
+                    value: 12
                 }
             ]
         },
